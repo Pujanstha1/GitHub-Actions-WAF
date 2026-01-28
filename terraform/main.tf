@@ -1,10 +1,13 @@
-variable "aws_region" {
-  description = "AWS Region to deploy resources"
-  type        = string
-}
+# variable "aws_region" {
+#   description = "AWS Region to deploy resources"
+#   type        = string
+# }
 
+# provider "aws" {
+#   region = var.aws_region
+# }
 provider "aws" {
-  region = var.aws_region
+  region = "eu-north-1"
 }
 
 resource "aws_s3_bucket" "tf_state" {
