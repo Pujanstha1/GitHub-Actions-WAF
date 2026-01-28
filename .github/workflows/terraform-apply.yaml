@@ -4,9 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       working_directory:
-        description: "Terraform Working Directory"
+        description: "Terraform Working Directory [sonarqube | prometheus | grafana]"
         required: true 
-        default: "dev"
 
       aws_region:
         description: "AWS Region"
