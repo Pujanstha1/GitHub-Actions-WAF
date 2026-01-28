@@ -1,0 +1,70 @@
+name: Terraform Apply (Prod Firewall)
+
+on:
+  workflow_dispatch:
+    inputs:
+      working_directory:
+        description: "Terraform Working Directory"
+        required: true 
+        default: "dev"
+
+      aws_region:
+        description: "AWS Region"
+        required: true 
+        default: "us-east-1"
+      
+      instance_type:
+        description: "EC2 Instance Type"
+        required: true
+        default: t2.micro
+
+      root_volume_type:
+        description: "Root Volume Type"
+        required: true
+        default: gp2
+
+      root_volume_size:
+        description: "Root Volume Size (GB)"
+        required: true 
+        default: 20
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest 
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with: 
+          terraform_version: 1.5.7
+      
+      - name: Terraform Apply 
+        working-directory: ./terraform/envs/${{ inputs.working_directory }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ inputs.aws_region }}
+
+          TF_VAR_environment: ${{ inputs.working_directory }}
+          TF_VAR_instance_type: ${{ inputs.instance_type }}
+          TF_VAR_root_volume_type: ${{ inputs.root_volume_type }}
+          TF_VAR_root_volume_size: "${{ inputs.root_volume_size }}"
+          TF_VAR_delete_on_termination: "${{ vars.DELETE_ON_TERMINATION }}" 
+
+          TF_VAR_ami_owners: '["${{ vars.AMI_OWNERS }}"]'                                 
+          TF_VAR_ami_name_pattern: ${{ vars.AMI_NAME_PATTERN }}                              
+          TF_VAR_ami_virtualization_type: ${{ vars.AMI_VIRTUALIZATION_TYPE }}             
+          TF_VAR_ami_architecture: ${{ vars.AMI_ARCHITECTURE }}                           
+          TF_VAR_subnet_az: '["us-east-1a","us-east-1b","us-east-1c"]'          
+          TF_VAR_zone_id: ${{ vars.zone_id }}
+
+          TF_VAR_tags: '{"Project":"ec2","Environment":"${{ inputs.working_directory }}","ManagedBy":"terraform","Owner":"Security-Team"}'
+
+        run: |
+          terraform init
+          terraform validate
+          terraform plan
+          terraform apply -auto-approve
+
+      
