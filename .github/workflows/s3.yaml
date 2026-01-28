@@ -7,6 +7,12 @@ on:
         description: "Terraform Bootstrap Directory"
         required: true 
         default: terraform/
+      
+      aws_region:
+        description: "AWS Region to Deploy Resources"
+        required: true 
+        default: "eu-north-1"
+
   
 jobs:
   terraform:
@@ -15,7 +21,8 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY_ID: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
-      AWS_REGION: us-east-1
+      AWS_REGION: ${{ inputs.aws_region }}
+      TF_VAR_aws_region: ${{ inputs.aws_region }}
     
     steps:
       - uses: actions/checkout@v4
@@ -40,4 +47,3 @@ jobs:
         working-directory: ./${{ inputs.working_directory }}
         run: terraform apply -auto-approve
 
-        
