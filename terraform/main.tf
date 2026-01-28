@@ -7,6 +7,7 @@ provider "aws" {
   region = var.aws_region
 }
 
+
 resource "aws_s3_bucket" "tf_state" {
   bucket = "adex-terraform-9842463240"
 }

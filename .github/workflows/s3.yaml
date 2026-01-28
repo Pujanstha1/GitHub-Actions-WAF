@@ -11,7 +11,7 @@ on:
       aws_region:
         description: "AWS Region to Deploy Resources"
         required: true 
-        default: "eu-north-1"
+        default: "us-east-1"
 
   
 jobs:
