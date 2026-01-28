@@ -8,10 +8,10 @@ on:
         required: true 
         default: terraform/
       
-      # aws_region:
-      #   description: "AWS Region to Deploy Resources"
-      #   required: true 
-      #   default: "eu-north-1"
+      aws_region:
+        description: "AWS Region to Deploy Resources"
+        required: true 
+        default: "eu-north-1"
 
   
 jobs:
@@ -21,11 +21,11 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY_ID: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: us-east-1
-      # AWS_REGION: ${{ inputs.aws_region }}
+      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+      AWS_REGION: ${{ inputs.aws_region }}
 
-      # # Terraform Variables
-      # TF_VAR_aws_region: ${{ inputs.aws_region }}
+      # Terraform Variables
+      TF_VAR_aws_region: ${{ inputs.aws_region }}
     
     steps:
       - uses: actions/checkout@v4
